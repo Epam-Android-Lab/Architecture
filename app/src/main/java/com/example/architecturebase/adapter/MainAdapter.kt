@@ -8,7 +8,7 @@ import com.example.architecturebase.network.model.Post
 
 class MainAdapter : RecyclerView.Adapter<MainAdapter.Holder>() {
 
-    var items: List<Post> = emptyList()
+    public var items: List<Post> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
