@@ -1,6 +1,5 @@
-package com.example.architecturebase.fragment
+package com.example.architecturebase.presentation.view
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.architecturebase.MvpContract
-import com.example.architecturebase.MvpPresenter
-import com.example.architecturebase.R
-import com.example.architecturebase.adapter.MainAdapter
+import com.example.architecturebase.presentation.adapter.MainAdapter
 import com.example.architecturebase.databinding.FragmentViewBinding
-import com.example.architecturebase.network.model.Post
+import com.example.architecturebase.domain.entities.Post
+import com.example.architecturebase.presentation.presenter.MvpPresenter
+import com.example.architecturebase.presentation.contract.MvpContract
+
 // реализация view, в даном случае это фрагмент
 class FragmentView : Fragment(), MvpContract.IView {
 

@@ -1,20 +1,19 @@
-package com.example.architecturebase
+package com.example.architecturebase.data.repos
 
-import android.widget.Toast
-import com.example.architecturebase.network.RetrofitInstance
-import com.example.architecturebase.network.model.Post
+import com.example.architecturebase.domain.entities.Post
+import com.example.architecturebase.domain.repos.NewsRepo
+import com.example.architecturebase.domain.usecases.LoadNewsUseCase
+import com.example.architecturebase.presentation.contract.MvpContract
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MvpPresenter(val mvpView: MvpContract.IView) : MvpContract.IPresenter {
+class NewsRepoImpl(private val mvpView: MvpContract.IView) : NewsRepo {
 
-    // получаем объект Retrofit'а
-    private val postApi = RetrofitInstance.getRetrofitInstance()
+    private val loadNewsUseCase: LoadNewsUseCase = LoadNewsUseCase()
 
-    // получаем список
-    override fun getItemsFromNetwork(){
-        postApi.getPosts().enqueue(object : Callback<List<Post>> {
+    override fun getNews() {
+        return loadNewsUseCase.loadNews().enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (response.isSuccessful) {
                     response.body()?.let { posts ->

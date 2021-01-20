@@ -15,7 +15,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:name="com.example.architecturebase.fragment.FragmentView"
         tools:layout="@layout/fragment_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
