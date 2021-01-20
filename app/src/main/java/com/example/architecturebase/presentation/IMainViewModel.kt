@@ -1,8 +1,7 @@
-package com.example.architecturebase
+package com.example.architecturebase.presentation
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.architecturebase.network.model.Post
+import com.example.architecturebase.domain.models.Post
 
 interface IMainViewModel {
     val recyclerData: MutableLiveData<List<Post>>
