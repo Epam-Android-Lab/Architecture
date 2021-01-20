@@ -1,10 +1,12 @@
-package com.example.architecturebase.mvp
+package com.example.architecturebase.presentation.mvp
 
+import com.example.architecturebase.data.Repository
 import com.example.architecturebase.domain.UsesCasesGetPosts
 
 class MvpPresenter(private val view: MvpContract.IView) : MvpContract.IPresenter{
 
-    private val usesCasesGetPosts = UsesCasesGetPosts()
+    // should be injected with DI to become nice
+    private val usesCasesGetPosts = UsesCasesGetPosts(Repository())
 
     override fun loadNewPosts() {
         view.showNewPosts(emptyList())
