@@ -1,12 +1,12 @@
-package com.example.architecturebase.mvp
+package com.example.architecturebase.presentation.mvp
 
-import com.example.architecturebase.network.model.Post
+import com.example.architecturebase.domain.Post
 
 interface MvpContract {
 
     interface IView{
         fun showNewPosts(posts: List<Post>)
-        fun showError()
+        fun showError(t: Throwable)
     }
 
     interface IPresenter{
