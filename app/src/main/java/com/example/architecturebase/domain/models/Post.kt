@@ -1,4 +1,4 @@
-package com.example.architecturebase.network.model
+package com.example.architecturebase.domain.models
 
 import com.google.gson.annotations.SerializedName
 

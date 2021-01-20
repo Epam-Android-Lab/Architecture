@@ -1,4 +1,4 @@
-package com.example.architecturebase
+package com.example.architecturebase.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.architecturebase.adapter.MainAdapter
+import com.example.architecturebase.presentation.adapter.MainAdapter
 import com.example.architecturebase.databinding.FragmentDataListBinding
-import com.example.architecturebase.network.model.Post
+import com.example.architecturebase.domain.models.Post
 
 
 class DataListFragment : Fragment(), MvpContract.IView {
@@ -39,7 +39,7 @@ class DataListFragment : Fragment(), MvpContract.IView {
             adapter = mainAdapter
         }
 
-        presenter.getData()
+        presenter.loadPosts()
     }
 
     override fun setData(data: List<Post>) {

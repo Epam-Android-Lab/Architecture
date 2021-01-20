@@ -1,15 +1,12 @@
-package com.example.architecturebase
+package com.example.architecturebase.presentation
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.architecturebase.adapter.MainAdapter
+import com.example.architecturebase.R
 import com.example.architecturebase.databinding.ActivityMainBinding
-import com.example.architecturebase.network.model.Post
 
-class MvpView : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
