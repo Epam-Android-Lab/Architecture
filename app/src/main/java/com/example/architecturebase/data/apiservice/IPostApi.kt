@@ -1,6 +1,6 @@
-package com.example.architecturebase.network
+package com.example.architecturebase.data.apiservice
 
-import com.example.architecturebase.network.model.Post
+import com.example.architecturebase.domain.models.Post
 import retrofit2.Call
 import retrofit2.http.GET
 
