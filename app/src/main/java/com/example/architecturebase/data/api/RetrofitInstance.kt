@@ -1,11 +1,9 @@
-package com.example.architecturebase
+package com.example.architecturebase.data.api
 
-import com.example.architecturebase.network.IPostApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
@@ -25,5 +23,5 @@ object RetrofitInstance {
             .client(okHttpClient)
             .build()
 
-    fun getRetrofit() = retrofit.create(IPostApi::class.java)
+    fun getRetrofit(): IPostApi = retrofit.create(IPostApi::class.java)
 }
