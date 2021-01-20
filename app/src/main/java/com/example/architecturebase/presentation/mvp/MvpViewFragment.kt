@@ -1,4 +1,4 @@
-package com.example.architecturebase.mvp
+package com.example.architecturebase.presentation.mvp
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.architecturebase.adapter.MainAdapter
+import com.example.architecturebase.presentation.adapter.MainAdapter
 import com.example.architecturebase.databinding.FragmentMvpViewBinding
-import com.example.architecturebase.network.model.Post
+import com.example.architecturebase.domain.Post
 
 class MvpViewFragment : Fragment(), MvpContract.IView {
 
@@ -22,7 +22,7 @@ class MvpViewFragment : Fragment(), MvpContract.IView {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMvpViewBinding.inflate(inflater, container, false)
         val view = binding.root
         return view

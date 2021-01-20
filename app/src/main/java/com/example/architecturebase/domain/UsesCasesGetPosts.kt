@@ -1,11 +1,7 @@
 package com.example.architecturebase.domain
 
-import com.example.architecturebase.data.Repository
-import com.example.architecturebase.network.model.Post
 
-class UsesCasesGetPosts() {
-
-    private val repository = Repository()
+class UsesCasesGetPosts(private val repository: RepositoryI) {
 
     fun getPosts(callback: (List<Post>) -> Unit){
         repository.getPosts { posts ->

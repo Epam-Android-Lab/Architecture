@@ -1,6 +1,6 @@
-package com.example.architecturebase.mvp
+package com.example.architecturebase.presentation.mvp
 
-import com.example.architecturebase.network.model.Post
+import com.example.architecturebase.domain.Post
 
 interface MvpContract {
 
