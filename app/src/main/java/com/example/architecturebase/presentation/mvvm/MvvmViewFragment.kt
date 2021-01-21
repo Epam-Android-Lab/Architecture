@@ -1,11 +1,13 @@
 package com.example.architecturebase.presentation.mvvm
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.architecturebase.presentation.adapter.MainAdapter
@@ -13,12 +15,16 @@ import com.example.architecturebase.databinding.FragmentMvvmViewBinding
 import com.example.architecturebase.data.network.model.Post
 
 
-class MvvmViewFragment : Fragment(){
+class MvvmViewFragment : Fragment(), LifecycleObserver{
 
     private var viewModel: MvvmContract.IViewModel = MvvmViewModel()
     private val mainAdapter = MainAdapter()
     private var _binding: FragmentMvvmViewBinding? = null
     private val binding get() = _binding!!
+
+    init {
+        lifecycle.addObserver(viewModel)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +47,7 @@ class MvvmViewFragment : Fragment(){
             layoutManager = LinearLayoutManager(context)
             adapter = mainAdapter
         }
+        viewModel.loadPosts()
         binding.listSRL.isRefreshing = true
 
         viewModel.posts.observe(viewLifecycleOwner, Observer<List<Post>>{

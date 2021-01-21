@@ -1,15 +1,14 @@
 package com.example.architecturebase.presentation.mvvm
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.architecturebase.data.Repository
 import com.example.architecturebase.domain.UsesCasesGetPosts
 
 import com.example.architecturebase.data.network.model.Post
 
-class MvvmViewModel : ViewModel(), MvvmContract.IViewModel {
+class MvvmViewModel : LifecycleObserver, MvvmContract.IViewModel {
 
-    private val getUsesCasesGetPosts = UsesCasesGetPosts(Repository())
+    private val usesCasesGetPosts = UsesCasesGetPosts(Repository())
 
     private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
     private val _errors: MutableLiveData<Throwable> = MutableLiveData()
@@ -19,7 +18,18 @@ class MvvmViewModel : ViewModel(), MvvmContract.IViewModel {
 
     override fun loadPosts() {
 
-   //     getUsesCasesGetPosts.getPosts(posts, errors)
+        usesCasesGetPosts.getPosts({ posts ->
 
+            _posts.value
+
+        }, { t ->
+            _errors.value
+        })
+
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onStart() {
+        loadPosts()
     }
 }
