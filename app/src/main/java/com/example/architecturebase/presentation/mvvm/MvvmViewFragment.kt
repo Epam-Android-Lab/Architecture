@@ -57,8 +57,7 @@ class MvvmViewFragment : Fragment(){
         viewModel.errors.observe(viewLifecycleOwner, Observer<Throwable>{
             showError(it)
         })
-
-
+        
         binding.listSRL.setOnRefreshListener {
             setOnRefreshListener()
         }
