@@ -1,7 +1,9 @@
 package com.example.architecturebase.data
 
-import com.example.architecturebase.network.IPostApi
-import com.example.architecturebase.network.model.Post
+
+import com.example.architecturebase.data.network.IPostApi
+import com.example.architecturebase.data.network.model.Post
+import com.example.architecturebase.domain.RepositoryI
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -11,44 +13,47 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class Repository {
+import com.example.architecturebase.domain.Post as PostEntity
 
-    private var postApi: IPostApi? = null
+class Repository : RepositoryI {
+
+    private val postApi: IPostApi?
 
     init {
 
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
-            .callTimeout(REQUEST_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .build()
+                .addInterceptor(HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                })
+                .callTimeout(REQUEST_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://jsonplaceholder.typicode.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+                .baseUrl("https://jsonplaceholder.typicode.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build()
 
         postApi = retrofit.create(IPostApi::class.java)
 
     }
 
-    fun getPosts(callback: (List<Post>) -> Unit) {
+    override fun getPosts(callback: (List<PostEntity>) -> Unit, errorCallback: (Throwable) -> Unit) {
         postApi?.getPosts()?.enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (response.isSuccessful) {
                     response.body()?.let { posts ->
-                        callback(posts)
+                        callback(posts.map {
+                            PostEntity(it.id, it.title, it.body)
+                        })
                     }
-                }
-                else{
+                } else {
                     callback(ArrayList())
                 }
             }
 
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                callback(ArrayList())
+                errorCallback(t)
             }
         })
     }

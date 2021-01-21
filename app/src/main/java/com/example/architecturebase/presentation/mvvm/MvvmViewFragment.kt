@@ -1,4 +1,4 @@
-package com.example.architecturebase.mvvm
+package com.example.architecturebase.presentation.mvvm
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,17 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.architecturebase.adapter.MainAdapter
+import com.example.architecturebase.presentation.adapter.MainAdapter
 import com.example.architecturebase.databinding.FragmentMvvmViewBinding
-import com.example.architecturebase.network.model.Post
+import com.example.architecturebase.data.network.model.Post
+
 
 class MvvmViewFragment : Fragment(){
 
-    private var viewModel: MvvmViewModel = MvvmViewModel()
+    private var viewModel: MvvmContract.IViewModel = MvvmViewModel()
     private val mainAdapter = MainAdapter()
     private var _binding: FragmentMvvmViewBinding? = null
     private val binding get() = _binding!!
@@ -44,11 +43,14 @@ class MvvmViewFragment : Fragment(){
         }
         binding.listSRL.isRefreshing = true
 
-        viewModel.loadPosts()
-
-        viewModel.posts.observe(viewLifecycleOwner){
+        viewModel.posts.observe(viewLifecycleOwner, Observer<List<Post>>{
             showNewPosts(it)
-        }
+        })
+
+        viewModel.errors.observe(viewLifecycleOwner, Observer<Throwable>{
+            showError(it)
+        })
+
 
         binding.listSRL.setOnRefreshListener {
             setOnRefreshListener()
@@ -66,8 +68,8 @@ class MvvmViewFragment : Fragment(){
         viewModel.loadPosts()
     }
 
-    fun showError() {
-        Toast.makeText(context, "error", Toast.LENGTH_SHORT).show()
+    private fun showError(t: Throwable) {
+        Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
         binding.listSRL.isRefreshing = false
     }
 
