@@ -12,10 +12,10 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.architecturebase.presentation.adapter.MainAdapter
 import com.example.architecturebase.databinding.FragmentMvvmViewBinding
-import com.example.architecturebase.data.network.model.Post
+import com.example.architecturebase.domain.Post
 
 
-class MvvmViewFragment : Fragment(), LifecycleObserver{
+class MvvmViewFragment : Fragment(){
 
     private var viewModel: MvvmContract.IViewModel = MvvmViewModel()
     private val mainAdapter = MainAdapter()
@@ -50,7 +50,7 @@ class MvvmViewFragment : Fragment(), LifecycleObserver{
         viewModel.loadPosts()
         binding.listSRL.isRefreshing = true
 
-        viewModel.posts.observe(viewLifecycleOwner, Observer<List<Post>>{
+        viewModel.posts.observe(viewLifecycleOwner,{
             showNewPosts(it)
         })
 

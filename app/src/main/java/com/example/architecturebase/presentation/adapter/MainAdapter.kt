@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.architecturebase.databinding.PostViewBinding
-import com.example.architecturebase.data.network.model.Post
+import com.example.architecturebase.domain.Post
 
 class MainAdapter : RecyclerView.Adapter<MainAdapter.Holder>() {
 
