@@ -23,5 +23,5 @@ object RetrofitInstance {
             .client(okHttpClient)
             .build()
 
-    fun getRetrofit(): IPostApi = retrofit.create(IPostApi::class.java)
+    fun getRetrofitInstance(): IPostApi = retrofit.create(IPostApi::class.java)
 }

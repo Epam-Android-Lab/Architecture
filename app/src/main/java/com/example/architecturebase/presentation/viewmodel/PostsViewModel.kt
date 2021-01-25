@@ -1,30 +1,32 @@
 package com.example.architecturebase.presentation.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.architecturebase.data.api.RetrofitCallback
 import com.example.architecturebase.domain.entities.Post
+import com.example.architecturebase.domain.usecases.LoadNewsUseCase
 import com.example.architecturebase.presentation.contract.PostContract
-import com.example.architecturebase.presentation.presenter.PostPresenter
 
-class PostsViewModel : ViewModel() {
+// вьюмодель
+class PostsViewModel : PostContract, ViewModel() {
 
-    private val presenter: PostContract.IPostPresenter = PostPresenter(this)
+    // для постов
+    override var newsList: MutableLiveData<List<Post>> = MutableLiveData()
+    // для ошибок
+    override var failMsg:  MutableLiveData<String> = MutableLiveData()
 
-    var postsLiveData: MutableLiveData<List<Post>>? = null
-    var refreshLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    override fun getNews() {
+        LoadNewsUseCase().loadNews(object : RetrofitCallback {
+            override fun onSuccessRequest(news: List<Post>) {
+                newsList.value = news
+            }
 
-    fun getPosts(): MutableLiveData<List<Post>> {
-        if(postsLiveData == null) {
-            postsLiveData = MutableLiveData()
-            loadPosts()
-        }
-        return postsLiveData as MutableLiveData<List<Post>>
-    }
+            override fun onFailedRequest(msg: String) {
+                failMsg.value = msg
+            }
 
-    fun getRefreshLiveDataObserver() = refreshLiveData
-
-    fun loadPosts() {
-        presenter.getNews()
+        })
     }
 
 }

@@ -1,9 +1,13 @@
 package com.example.architecturebase.presentation.contract
 
-import com.example.architecturebase.data.api.IPostApi
+import androidx.lifecycle.MutableLiveData
+import com.example.architecturebase.domain.entities.Post
 
+// создал контракт для вью модели
 interface PostContract {
-    interface IPostPresenter {
-        fun getNews()
-    }
+
+    var newsList: MutableLiveData<List<Post>>
+    var failMsg: MutableLiveData<String>
+    fun getNews()
+
 }
