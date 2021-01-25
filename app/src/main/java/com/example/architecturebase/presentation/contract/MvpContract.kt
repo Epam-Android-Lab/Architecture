@@ -8,7 +8,7 @@ interface MvpContract {
     interface IView {
         fun setItems(items: List<Post>)
         fun setRefreshing(flag: Boolean)
-        fun showToast(t: Throwable)
+        fun showFailToast(msg: String)
     }
 
     // Presenter и его метод

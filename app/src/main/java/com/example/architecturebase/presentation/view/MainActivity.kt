@@ -1,8 +1,8 @@
-package com.example.architecturebase
+package com.example.architecturebase.presentation.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.architecturebase.presentation.view.FragmentView
+import com.example.architecturebase.R
 
 class MainActivity : AppCompatActivity() {
 

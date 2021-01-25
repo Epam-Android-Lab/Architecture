@@ -54,7 +54,7 @@ class FragmentView : Fragment(), MvpContract.IView {
         binding.listSRL.isRefreshing = flag
     }
 
-    override fun showToast(t: Throwable) {
-        Toast.makeText(this.context, t.message, Toast.LENGTH_SHORT).show()
+    override fun showFailToast(msg: String) {
+        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
     }
 }
