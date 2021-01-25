@@ -2,49 +2,32 @@ package com.example.architecturebase
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.architecturebase.adapter.MainAdapter
 import com.example.architecturebase.databinding.ActivityMainBinding
 import com.example.architecturebase.network.IPostApi
+import com.example.architecturebase.network.INetworkConnection
+import com.example.architecturebase.network.ResponseUseCase
+import com.example.architecturebase.network.ResponseContract
+import com.example.architecturebase.network.model.DefaultConnection
 import com.example.architecturebase.network.model.Post
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity() {
-
-    companion object {
-        private const val REQUEST_TIMEOUT_SECONDS = 5L
-    }
+class MainActivity : FragmentActivity(), MVPContract.IView {
 
     private val binding by lazy {
         val bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
         bind
     }
-
     private val mainAdapter = MainAdapter()
+    private val INetworkConnection: INetworkConnection = DefaultConnection()
+    private val local: ResponseContract = ResponseUseCase()
 
-    private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        })
-        .callTimeout(REQUEST_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-        .build()
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://jsonplaceholder.typicode.com")
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(okHttpClient)
-        .build()
-
-    private val postApi = retrofit.create(IPostApi::class.java)
+    private val postApi = INetworkConnection.getRetrofit().create(IPostApi::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,19 +40,8 @@ class MainActivity : AppCompatActivity() {
         postApi.getPosts().enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (response.isSuccessful) {
-                    response.body()?.let { posts ->
-                        // logic starts
-                        val processedPosts = posts.filter {
-                            !it.title.startsWith("H")
-                        }.map {
-                            it.copy(title = it.title + "appendix")
-                        }.sortedBy {
-                            it.title
-                        }.subList(0, posts.size - 3)
-                        // logic ends
-                        mainAdapter.items = processedPosts
-                        binding.listSRL.isRefreshing = false
-                    }
+                    mainAdapter.items = local.onResponse(call, response)
+                    binding.listSRL.isRefreshing = false
                 }
             }
 
@@ -86,19 +58,8 @@ class MainActivity : AppCompatActivity() {
             postApi.getPosts().enqueue(object : Callback<List<Post>> {
                 override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                     if (response.isSuccessful) {
-                        response.body()?.let { posts ->
-                            // logic starts
-                            val processedPosts = posts.filter {
-                                !it.title.startsWith("H")
-                            }.map {
-                                it.copy(title = it.title + "appendix")
-                            }.sortedBy {
-                                it.title
-                            }.subList(0, posts.size - 3)
-                            // logic ends
-                            mainAdapter.items = processedPosts
-                            binding.listSRL.isRefreshing = false
-                        }
+                        mainAdapter.items = local.onResponse(call, response)
+                        binding.listSRL.isRefreshing = false
                     }
                 }
 
