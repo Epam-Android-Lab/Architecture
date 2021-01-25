@@ -7,13 +7,13 @@ import com.example.architecturebase.domain.Post
 import com.example.architecturebase.domain.UsesCasesGetPosts
 
 
-class MvvmViewModel : ViewModel(), MvvmContract.IViewModel {
+class MvvmViewModel : ViewModel(), MvvmContract {
 
     private val usesCasesGetPosts = UsesCasesGetPosts(Repository())
     private val _posts: MutableLiveData<List<Post>> = MutableLiveData()
     private val _errors: MutableLiveData<Throwable> = MutableLiveData()
-    override val posts: MutableLiveData<List<Post>> = _posts
-    override val errors: MutableLiveData<Throwable> = _errors
+    override val posts: LiveData<List<Post>> = _posts
+    override val errors: LiveData<Throwable> = _errors
 
     override fun loadPosts() {
 
