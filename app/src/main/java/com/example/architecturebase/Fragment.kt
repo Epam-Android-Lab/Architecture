@@ -1,5 +1,9 @@
 package com.example.architecturebase
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -12,7 +16,10 @@ import com.example.architecturebase.databinding.FragmentBinding
 class Fragment : Fragment(R.layout.fragment) {
 
     private val mvvmModelView: MvvmContract = ViewModelMvvm()
-
+    private val connectivityManager: ConnectivityManager by lazy {
+        val r = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE)
+        r as ConnectivityManager
+    }
 
     private var _binding: FragmentBinding? = null
     private val binding get() = _binding!!
@@ -27,9 +34,8 @@ class Fragment : Fragment(R.layout.fragment) {
             adapter = mainAdapter
         }
 
-        mvvmModelView.getPosts()
-
         binding.listSRL.isRefreshing = true
+        loadDataFromInternet()
 
         mvvmModelView.listPosts.observe(viewLifecycleOwner) {
             mainAdapter.items = it
@@ -40,7 +46,8 @@ class Fragment : Fragment(R.layout.fragment) {
 
         binding.listSRL.setOnRefreshListener {
             mainAdapter.items = emptyList()
-            mvvmModelView.getPosts()
+            loadDataFromInternet()
+
         }
     }
 
@@ -53,5 +60,30 @@ class Fragment : Fragment(R.layout.fragment) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun checkInternet(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val nw = connectivityManager.activeNetwork ?: return false
+            val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+            return when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            val nwInfo = connectivityManager.activeNetworkInfo ?: return false
+            return nwInfo.isConnected
+        }
+    }
+
+    private fun loadDataFromInternet() {
+        if (checkInternet()) {
+            mvvmModelView.getPosts()
+        } else {
+            binding.listSRL.isRefreshing = false
+            Toast.makeText(activity, "connect internet needed", Toast.LENGTH_SHORT).show()
+        }
     }
 }

@@ -21,7 +21,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.Holder>() {
     class Holder(private val binding: PostViewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Post) {
             binding.titleTV.text = item.title
-            binding.bodyTV.text = item.title
+            binding.bodyTV.text = item.intro
         }
     }
 

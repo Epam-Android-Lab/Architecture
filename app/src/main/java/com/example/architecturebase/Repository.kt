@@ -17,14 +17,14 @@ class Repository : IRepository {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://jsonplaceholder.typicode.com")
+        .baseUrl("https://api.dtf.ru/v1.8/")
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()
 
     private val postApi = retrofit.create(IPostApi::class.java)
 
-    override fun getData(): IPostApi {
+    override suspend fun getData(): IPostApi {
         return postApi
     }
 

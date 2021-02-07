@@ -1,10 +1,13 @@
 package com.example.architecturebase
 
-import androidx.lifecycle.*
-import com.example.architecturebase.UseCases.UseCaseGetPosts
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.architecturebase.network.model.Post
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class ViewModelMvvm :  MvvmContract, ViewModel() {
+class ViewModelMvvm : MvvmContract, ViewModel() {
 
 
     override val listPosts: MutableLiveData<List<Post>> = MutableLiveData()
@@ -12,14 +15,13 @@ class ViewModelMvvm :  MvvmContract, ViewModel() {
     override val errorMessage: MutableLiveData<Throwable> = MutableLiveData()
 
     override fun getPosts() {
-        UseCaseGetPosts.loadPosts(object : CallbackFromRetrofit {
-            override fun onSuccess(value: List<Post>) {
-                listPosts.value = value
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val r = Repository().getData().getPosts()
+                listPosts.postValue(r.result)
+            } catch (e: Exception) {
+                errorMessage.postValue(e)
             }
-
-            override fun onFailure(value: Throwable) {
-                errorMessage.value = value
-            }
-        })
+        }
     }
 }
