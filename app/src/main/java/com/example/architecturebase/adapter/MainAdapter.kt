@@ -21,18 +21,18 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.Holder>() {
     class Holder(private val binding: PostViewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Post) {
             binding.titleTV.text = item.title
-            binding.bodyTV.text = item.title
+            binding.bodyTV.text = item.intro
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        Holder(
-            binding = PostViewBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+            Holder(
+                    binding = PostViewBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                    )
             )
-        )
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.bind(items[position])
