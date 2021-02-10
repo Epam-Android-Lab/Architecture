@@ -9,5 +9,6 @@ interface PostContract {
     var newsList: MutableLiveData<List<Post>>
     var failMsg: MutableLiveData<String>
     fun getNews()
+    fun pushPost()
 
 }

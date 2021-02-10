@@ -3,10 +3,13 @@ package com.example.architecturebase.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.architecturebase.data.api.RetrofitCallback
 import com.example.architecturebase.domain.entities.Post
 import com.example.architecturebase.domain.usecases.LoadNewsUseCase
 import com.example.architecturebase.presentation.contract.PostContract
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // вьюмодель
 class PostsViewModel : PostContract, ViewModel() {
@@ -17,16 +20,26 @@ class PostsViewModel : PostContract, ViewModel() {
     override var failMsg:  MutableLiveData<String> = MutableLiveData()
 
     override fun getNews() {
-        LoadNewsUseCase().loadNews(object : RetrofitCallback {
-            override fun onSuccessRequest(news: List<Post>) {
-                newsList.value = news
+        viewModelScope.launch(Dispatchers.IO) {
+            try{
+                val response = LoadNewsUseCase().loadNews()
+                if(response.isSuccessful){
+                    response.body()?.let {
+                        newsList.postValue(it)
+                    }
+                }
+            } catch (e: Exception) {
+                newsList.postValue(listOf())
             }
 
-            override fun onFailedRequest(msg: String) {
-                failMsg.value = msg
-            }
+        }
 
-        })
+    }
+
+    override fun pushPost() {
+        viewModelScope.launch(Dispatchers.IO) {
+            LoadNewsUseCase().pushPost()
+        }
     }
 
 }
